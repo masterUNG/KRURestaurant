@@ -28,7 +28,22 @@ public class OrderActivity extends AppCompatActivity {
 
         showDesk();
 
+        showFood();
+
     }   // Main Method
+
+    private void showFood() {
+
+        ManageTABLE objManageTABLE = new ManageTABLE(this);
+        String[] foodStrings = objManageTABLE.readAllData(1);
+        String[] sourceStrings = objManageTABLE.readAllData(2);
+        String[] priceStrings = objManageTABLE.readAllData(3);
+
+        MyAdapter objMyAdapter = new MyAdapter(OrderActivity.this, foodStrings, priceStrings, sourceStrings);
+        foodListView.setAdapter(objMyAdapter);
+
+
+    }
 
     private void showDesk() {
 

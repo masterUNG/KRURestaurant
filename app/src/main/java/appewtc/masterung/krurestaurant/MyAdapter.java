@@ -56,6 +56,6 @@ public class MyAdapter extends BaseAdapter{
         Picasso.with(objContext).load(sourceStrings[i]).resize(100,100).into(iconImageView);
 
 
-        return null;
+        return objView1;
     }
 }   // Main Class
