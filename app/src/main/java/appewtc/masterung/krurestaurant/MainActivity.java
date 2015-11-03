@@ -1,5 +1,6 @@
 package appewtc.masterung.krurestaurant;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -33,10 +34,21 @@ public class MainActivity extends AppCompatActivity {
         //Tester
         //testAddValue();
 
+        //Delete All Data
+        deleteAllData();
+
+
         //Synchronize JSON to SQLite
         synJSONtoSQLite();
 
     }   // Main Method
+
+    private void deleteAllData() {
+
+        SQLiteDatabase objSqLiteDatabase = openOrCreateDatabase("kru.db", MODE_PRIVATE, null);
+        objSqLiteDatabase.delete("userTABLE", null, null);
+        objSqLiteDatabase.delete("foodTABLE", null, null);
+    }
 
     private void synJSONtoSQLite() {
 
