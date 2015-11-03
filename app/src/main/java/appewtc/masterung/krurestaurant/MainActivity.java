@@ -1,10 +1,14 @@
 package appewtc.masterung.krurestaurant;
 
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -22,11 +26,16 @@ public class MainActivity extends AppCompatActivity {
 
     //Explicit
     private ManageTABLE objManageTABLE;
+    private EditText userEditText, passEditText;
+    private String userString, passString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Bind Widget
+        bindWidget();
 
         //Connected Database
         objManageTABLE = new ManageTABLE(this);
@@ -42,6 +51,50 @@ public class MainActivity extends AppCompatActivity {
         synJSONtoSQLite();
 
     }   // Main Method
+
+    public void clickLogin(View view) {
+
+        userString = userEditText.getText().toString().trim();
+        passString = passEditText.getText().toString().trim();
+
+        if (userString.equals("") || passString.equals("") ) {
+            Toast.makeText(MainActivity.this, "Have Space", Toast.LENGTH_LONG).show();
+        } else {
+
+            checkUser();
+
+        }
+
+    }
+
+    private void checkUser() {
+
+        try {
+
+            String[] strResult = objManageTABLE.searchUser(userString);
+
+            if (passString.equals(strResult[2])) {
+
+                Intent objIntent = new Intent(MainActivity.this, OrderActivity.class);
+                objIntent.putExtra("Name", strResult[3]);
+                startActivity(objIntent);
+                finish();
+
+            } else {
+                Toast.makeText(MainActivity.this, "Password False" , Toast.LENGTH_LONG).show();
+            }
+
+        } catch (Exception e) {
+            Toast.makeText(MainActivity.this, "No This User in my Database", Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+
+    private void bindWidget() {
+        userEditText = (EditText) findViewById(R.id.editText);
+        passEditText = (EditText) findViewById(R.id.editText2);
+    }
 
     private void deleteAllData() {
 
