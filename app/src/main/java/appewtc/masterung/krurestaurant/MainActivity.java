@@ -10,6 +10,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -26,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //Connected Database
-        //objManageTABLE = new ManageTABLE(this);
+        objManageTABLE = new ManageTABLE(this);
 
         //Tester
         //testAddValue();
@@ -63,6 +65,10 @@ public class MainActivity extends AppCompatActivity {
                     case 2:
                         objHttpPost = new HttpPost("http://swiftcodingthai.com/kru/php_get_data_food.php");
                         break;
+                    default:
+                        objHttpPost = new HttpPost("http://swiftcodingthai.com/kru/php_get_data_master.php");
+                        break;
+
                 }   // switch
 
                 HttpResponse objHttpResponse = objHttpClient.execute(objHttpPost);
@@ -81,12 +87,51 @@ public class MainActivity extends AppCompatActivity {
                 StringBuilder objStringBuilder = new StringBuilder();
                 String strLine = null;
 
+                while ((strLine = objBufferedReader.readLine()) != null ) {
+                    objStringBuilder.append(strLine);
+                }   // while
+
+                objInputStream.close();
+                strJSON = objStringBuilder.toString();
+
 
             } catch (Exception e) {
                 Log.d("kru", "JSON ==> " + e.toString());
             }
 
             //4. Update to SQLite
+            try {
+
+                JSONArray objJsonArray = new JSONArray(strJSON);
+
+                for (int i = 0; i < objJsonArray.length(); i++) {
+
+                    final JSONObject object = objJsonArray.getJSONObject(i);
+
+                    switch (intTimes) {
+                        case 1:
+
+                            String strUser = object.getString("User");
+                            String strPassword = object.getString("Password");
+                            String strName = object.getString("Name");
+                            objManageTABLE.addNewUser(strUser, strPassword, strName);
+
+                            break;
+                        case 2:
+
+                            String strFood = object.getString("Food");
+                            String strSource = object.getString("Source");
+                            String strPrice = object.getString("Price");
+                            objManageTABLE.addNewFood(strFood, strSource, strPrice);
+
+                            break;
+                    }   // switch
+
+                }   // for
+
+            } catch (Exception e) {
+                Log.d("kru", "Update ==> " + e.toString());
+            }
 
 
             intTimes += 1;
