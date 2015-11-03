@@ -2,6 +2,9 @@ package appewtc.masterung.krurestaurant;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -23,7 +26,31 @@ public class OrderActivity extends AppCompatActivity {
 
         showView();
 
+        showDesk();
+
     }   // Main Method
+
+    private void showDesk() {
+
+        final String[] strDesk = {"1A", "2A", "3A", "4A", "5A", "6A", "7A", "8A", "9A", "10A"};
+
+        ArrayAdapter<String> deskAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, strDesk);
+        deskSpinner.setAdapter(deskAdapter);
+
+        deskSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                deskString = strDesk[i];
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                deskString = strDesk[0];
+            }
+        });
+
+    }
+
 
     private void showView() {
 
